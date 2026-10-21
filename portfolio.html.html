@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hayqa Zahid — Full Stack Web Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14181d; --ink-soft:#4a525b;
+    --paper:#f1f0ea; --panel:#ffffff;
+    --line:#d9d7cd;
+    --accent:#1f8a70; --accent-soft:#e3efe9;
+    --accent2:#2f5fd0; --accent2-soft:#e7ecfa;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#eef0ee; --ink-soft:#a9b0aa;
+      --paper:#12151a; --panel:#181c22;
+      --line:#2a2f36;
+      --accent:#3fc9a5; --accent-soft:#16241f;
+      --accent2:#7ea0ff; --accent2-soft:#182036;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#eef0ee; --ink-soft:#a9b0aa;
+    --paper:#12151a; --panel:#181c22;
+    --line:#2a2f36;
+    --accent:#3fc9a5; --accent-soft:#16241f;
+    --accent2:#7ea0ff; --accent2-soft:#182036;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Inter',sans-serif; font-size:16px; line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;}
+  .field{ font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.02em;
+    color:var(--accent); }
+
+  /* ---------- Nav ---------- */
+  header{
+    position:sticky; top:0; top:env(safe-area-inset-top,0px);
+    z-index:50; background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1080px; margin:0 auto; padding:18px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:1.05rem; text-decoration:none; cursor:pointer; }
+  .brand span{ color:var(--accent); }
+  nav{ display:flex; gap:6px; }
+  nav button{
+    font-family:'IBM Plex Mono',monospace; font-size:.82rem; background:none; border:none;
+    color:var(--ink-soft); cursor:pointer; padding:8px 14px; border-radius:6px; transition:color .15s;
+  }
+  nav button:hover{ color:var(--ink); }
+  nav button.active{ color:var(--ink); background:var(--accent-soft); }
+  nav button:focus-visible, .brand:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  main{ max-width:1080px; margin:0 auto; padding:0 28px; }
+  .view{ display:none; }
+  .view.active{ display:block; }
+
+  /* ---------- Home / hero ---------- */
+  .hero{ padding:80px 0 50px; }
+  .eyebrow{ font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.04em; color:var(--accent); margin:0 0 20px; }
+  h1{ font-family:'Space Grotesk',sans-serif; font-size:clamp(2.2rem,5.4vw,3.5rem); line-height:1.08; margin:0 0 20px; font-weight:700; max-width:16ch; }
+  h1 .hl-a{ color:var(--accent); }
+  h1 .hl-b{ color:var(--accent2); }
+  .lede{ max-width:56ch; color:var(--ink-soft); margin:0 0 28px; font-size:1.02rem; }
+  .row-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:22px; }
+  .btn{
+    font-family:'IBM Plex Mono',monospace; font-size:.85rem; padding:11px 20px; border-radius:7px;
+    text-decoration:none; border:1px solid var(--line); cursor:pointer; background:var(--panel); color:var(--ink);
+    transition:border-color .15s, transform .15s; display:inline-flex; align-items:center; gap:6px;
+  }
+  .btn.primary{ background:var(--accent); color:#fff; border-color:var(--accent); }
+  .btn:hover{ transform:translateY(-1px); border-color:var(--accent); }
+  .avail{ font-family:'IBM Plex Mono',monospace; font-size:.78rem; color:var(--ink-soft); margin:0 0 22px; }
+  .avail .dot{ display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--accent); margin-right:7px; }
+  .pill-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .pill{ font-family:'IBM Plex Mono',monospace; font-size:.74rem; padding:5px 11px; border:1px solid var(--line); border-radius:20px; color:var(--ink-soft); background:var(--panel); }
+
+  .record{ padding:44px 0 8px; border-top:1px solid var(--line); }
+  .fields{ display:grid; grid-template-columns:140px 1fr; row-gap:14px; column-gap:18px; padding-top:6px;}
+  .fields dt{ font-family:'IBM Plex Mono',monospace; font-size:.8rem; color:var(--ink-soft); }
+  .fields dd{ margin:0; font-size:.97rem; }
+
+  .tech-section{ padding:56px 0 8px; border-top:1px solid var(--line); margin-top:40px; }
+  .tech-section h2, .cap-section h2{ font-family:'Space Grotesk',sans-serif; font-size:clamp(1.6rem,3.6vw,2.1rem); margin:10px 0 10px; font-weight:600; }
+  .tech-section > p, .cap-section > p{ color:var(--ink-soft); max-width:56ch; margin:0 0 30px; font-size:.95rem; }
+  .tech-group{ margin-bottom:24px; }
+  .tech-group .glabel{ font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:10px; display:block; }
+
+  .cap-section{ padding:56px 0 70px; }
+  .cap-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
+  .cap-card{ border:1px solid var(--line); border-radius:9px; padding:22px; background:var(--panel); }
+  .cap-card h3{ font-family:'Space Grotesk',sans-serif; margin:0 0 10px; font-size:1rem; font-weight:600; }
+  .cap-card p{ margin:0; font-size:.87rem; color:var(--ink-soft); }
+
+  /* ---------- Work ---------- */
+  .work-head{ padding:72px 0 8px; }
+  .work-head h2{ font-family:'Space Grotesk',sans-serif; font-size:clamp(1.8rem,4vw,2.5rem); margin:10px 0 12px; font-weight:600; }
+  .work-head p{ color:var(--ink-soft); max-width:56ch; margin:0 0 40px; }
+
+  .proj-list{ display:flex; flex-direction:column; border-top:1px solid var(--line); margin-bottom:20px; }
+  .proj{ display:grid; grid-template-columns:52px 1fr; gap:22px; padding:28px 0; border-bottom:1px solid var(--line); }
+  .proj-num{ font-family:'IBM Plex Mono',monospace; font-size:.8rem; color:var(--accent); padding-top:4px; }
+  .proj-body h3{ font-family:'Space Grotesk',sans-serif; font-size:1.2rem; margin:0 0 8px; font-weight:600; }
+  .proj-body p{ margin:0 0 14px; color:var(--ink-soft); font-size:.93rem; max-width:64ch; }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:7px; margin-bottom:16px; }
+  .tag{ font-family:'IBM Plex Mono',monospace; font-size:.72rem; padding:4px 9px; border-radius:5px; color:var(--ink-soft); background:var(--accent-soft); }
+  .proj-links{ display:flex; gap:10px; }
+  .proj-links a{ font-family:'IBM Plex Mono',monospace; font-size:.8rem; text-decoration:none; border:1px solid var(--line); padding:7px 13px; border-radius:6px; display:inline-flex; align-items:center; gap:6px; transition:border-color .15s, color .15s; }
+  .proj-links a:hover{ border-color:var(--accent); color:var(--accent); }
+
+  .also-built{ padding:8px 0 60px; }
+  .also-built .glabel{ font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.04em; color:var(--ink-soft); display:block; margin-bottom:14px; }
+  .mini-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+  .mini-card{ border:1px solid var(--line); border-radius:8px; padding:16px; background:var(--panel); }
+  .mini-card h4{ font-family:'Space Grotesk',sans-serif; font-size:.92rem; margin:0 0 6px; font-weight:600; }
+  .mini-card p{ margin:0 0 10px; font-size:.82rem; color:var(--ink-soft); }
+  .mini-card .tag-row{ margin-bottom:0; }
+  .mini-card .tag{ font-size:.68rem; }
+
+  .exp-block{ padding:0 0 70px; }
+  .exp-item{ display:grid; grid-template-columns:170px 1fr; gap:22px; padding:22px 0; border-bottom:1px solid var(--line); }
+  .exp-item:first-of-type{ border-top:1px solid var(--line); }
+  .exp-date{ font-family:'IBM Plex Mono',monospace; font-size:.8rem; color:var(--ink-soft); padding-top:2px; }
+  .exp-item h4{ margin:0 0 6px; font-family:'Space Grotesk',sans-serif; font-size:1.02rem; font-weight:600; }
+  .exp-item .co{ color:var(--accent); font-family:'IBM Plex Mono',monospace; font-size:.82rem; }
+  .exp-item ul{ margin:10px 0 0; padding-left:18px; color:var(--ink-soft); font-size:.88rem; }
+  .exp-item li{ margin-bottom:5px; }
+
+  /* ---------- Contact ---------- */
+  .contact-wrap{ padding:96px 0 100px; }
+  .contact-wrap h2{ font-family:'Space Grotesk',sans-serif; font-size:clamp(1.9rem,4.5vw,2.7rem); margin:14px 0 16px; font-weight:600; max-width:14ch; }
+  .contact-wrap>p{ color:var(--ink-soft); max-width:52ch; margin:0 0 44px; }
+  .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:640px; }
+  .c-card{ border:1px solid var(--line); border-radius:9px; padding:22px; background:var(--panel); text-decoration:none; display:block; transition:border-color .15s, transform .15s; }
+  .c-card:hover{ border-color:var(--accent); transform:translateY(-2px); }
+  .c-card .field{ display:block; margin-bottom:8px; }
+  .c-card .val{ font-family:'Space Grotesk',sans-serif; font-size:1.02rem; font-weight:600; word-break:break-word; }
+
+  footer{ border-top:1px solid var(--line); padding:24px 0; }
+  .foot-inner{ max-width:1080px; margin:0 auto; padding:0 28px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-family:'IBM Plex Mono',monospace; font-size:.76rem; color:var(--ink-soft); }
+
+  @media (max-width:640px){
+    .fields{ grid-template-columns:1fr; row-gap:10px; }
+    .fields dt{ margin-top:6px; }
+    .proj{ grid-template-columns:1fr; }
+    .exp-item{ grid-template-columns:1fr; }
+    .contact-grid{ grid-template-columns:1fr; }
+    .nav-inner{ padding:14px 18px; }
+    main{ padding:0 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <a class="brand" onclick="go('home')" tabindex="0">HAYQA<span>.</span>ZAHID</a>
+    <nav>
+      <button data-v="home" class="active" onclick="go('home')">Home</button>
+      <button data-v="work" onclick="go('work')">Work</button>
+      <button data-v="contact" onclick="go('contact')">Contact</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- HOME -->
+  <section class="view active" id="home">
+    <div class="hero">
+      <p class="eyebrow">FULL STACK DEVELOPER · MERN STACK · DATABASE ENGINEER</p>
+      <h1>Hayqa Zahid<br>building <span class="hl-a">scalable</span>,<br><span class="hl-b">data-driven</span> web systems.</h1>
+      <p class="lede">Database Engineer turned full-stack builder — designing SQL Server and MongoDB schemas, then shipping the React, Node.js, and Svelte applications that run on top of them.</p>
+      <div class="row-actions">
+        <button class="btn primary" onclick="go('work')">View work</button>
+        <button class="btn" onclick="go('contact')">Get in touch</button>
+        <a class="btn" href="https://github.com/HayqaZahid" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+      <p class="avail"><span class="dot"></span>Open to full-stack &amp; database engineering roles</p>
+      <div class="pill-row">
+        <span class="pill">React</span><span class="pill">Node.js</span><span class="pill">MongoDB</span><span class="pill">SQL Server</span><span class="pill">TypeScript</span><span class="pill">Svelte</span>
+      </div>
+    </div>
+
+    <div class="record">
+      <dl class="fields">
+        <dt>role</dt><dd>Full Stack Web Engineer</dd>
+        <dt>focus</dt><dd>Relational &amp; document database design, full-stack delivery, client-facing ownership</dd>
+        <dt>education</dt><dd>BS Computer Science, PMAS Arid Agricultural University, Rawalpindi — 7th semester (2023–2027)</dd>
+        <dt>languages</dt><dd class="pill-row"><span class="pill">Urdu</span><span class="pill">English</span></dd>
+      </dl>
+    </div>
+
+    <div class="tech-section">
+      <p class="field">02 — tech stack</p>
+      <h2>Tools &amp; technologies</h2>
+      <p>Full stack, backend, and database tooling behind the systems I build.</p>
+
+      <div class="tech-group">
+        <span class="glabel">FRONTEND</span>
+        <div class="pill-row">
+          <span class="pill">React.js</span><span class="pill">TypeScript</span><span class="pill">JavaScript</span><span class="pill">Astro</span><span class="pill">Svelte</span><span class="pill">HTML/CSS</span>
+        </div>
+      </div>
+      <div class="tech-group">
+        <span class="glabel">BACKEND</span>
+        <div class="pill-row">
+          <span class="pill">Node.js</span><span class="pill">Express.js</span><span class="pill">ASP.NET</span><span class="pill">C#</span><span class="pill">REST APIs</span>
+        </div>
+      </div>
+      <div class="tech-group">
+        <span class="glabel">DATABASES</span>
+        <div class="pill-row">
+          <span class="pill">SQL Server</span><span class="pill">MongoDB</span><span class="pill">Mongoose</span><span class="pill">SQLite</span>
+        </div>
+      </div>
+      <div class="tech-group">
+        <span class="glabel">TOOLS</span>
+        <div class="pill-row">
+          <span class="pill">Git</span><span class="pill">VS Code</span><span class="pill">Android Studio</span><span class="pill">Shopify</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cap-section">
+      <p class="field">03 — what I build</p>
+      <h2>Capabilities</h2>
+      <p>Web-first, database-backed — from schema to shipped product.</p>
+      <div class="cap-grid">
+        <div class="cap-card">
+          <h3>Full-stack web applications</h3>
+          <p>End-to-end products from database schema to polished UI — multi-tenant platforms, CMS builds, client sites.</p>
+        </div>
+        <div class="cap-card">
+          <h3>Database &amp; backend systems</h3>
+          <p>Relational and document schemas, REST APIs, stored procedures, and data integrity across SQL Server and MongoDB.</p>
+        </div>
+        <div class="cap-card">
+          <h3>Dynamic UIs with React</h3>
+          <p>Interactive, performant frontends with React, TypeScript, and Svelte.</p>
+        </div>
+        <div class="cap-card">
+          <h3>API integration &amp; deployment</h3>
+          <p>Connecting third-party services with type-safe APIs, then owning delivery through to client handover.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section class="view" id="work">
+    <div class="work-head">
+      <p class="field">01 — selected work</p>
+      <h2>Projects &amp; live builds</h2>
+      <p>Web platforms and database-heavy systems, from schema design through deployment.</p>
+    </div>
+
+    <div class="proj-list">
+
+      <div class="proj">
+        <div class="proj-num">01</div>
+        <div class="proj-body">
+          <h3>MapIn</h3>
+          <p>Interactive tourism platform for exploring locations, rating places, and sharing feedback through comments and star ratings.</p>
+          <div class="tag-row"><span class="tag">React.js</span><span class="tag">TypeScript</span><span class="tag">JavaScript</span></div>
+          <div class="proj-links"><a href="https://mappin-esax-ten.vercel.app" target="_blank" rel="noopener">Visit site ↗</a></div>
+        </div>
+      </div>
+
+      <div class="proj">
+        <div class="proj-num">02</div>
+        <div class="proj-body">
+          <h3>Ledger</h3>
+          <p>Web application for tracking and organizing financial records, built with a focus on clean data entry and clear reporting.</p>
+          <div class="tag-row"><span class="tag">Full-Stack</span><span class="tag">Database-driven</span></div>
+          <div class="proj-links"><a href="https://ledger-taupe-eight.vercel.app" target="_blank" rel="noopener">Visit site ↗</a></div>
+        </div>
+      </div>
+
+      <div class="proj">
+        <div class="proj-num">03</div>
+        <div class="proj-body">
+          <h3>ParallaxX</h3>
+          <p>Motion-led marketing site exploring parallax scroll effects and layered visual storytelling.</p>
+          <div class="tag-row"><span class="tag">Frontend</span><span class="tag">Animation</span></div>
+          <div class="proj-links"><a href="https://parallax-site-nine.vercel.app" target="_blank" rel="noopener">Visit site ↗</a></div>
+        </div>
+      </div>
+
+      <div class="proj">
+        <div class="proj-num">04</div>
+        <div class="proj-body">
+          <h3>CodeReview</h3>
+          <p>AI-powered code review system that automates analysis and delivers intelligent suggestions to improve code quality, backed by a MongoDB store for submissions and review history.</p>
+          <div class="tag-row"><span class="tag">Node.js</span><span class="tag">Express.js</span><span class="tag">MongoDB</span><span class="tag">Gemini API</span></div>
+          <div class="proj-links"><a href="https://code-review-frontend-rouge.vercel.app" target="_blank" rel="noopener">Visit site ↗</a></div>
+        </div>
+      </div>
+
+      <div class="proj">
+        <div class="proj-num">05</div>
+        <div class="proj-body">
+          <h3>Mind-Well</h3>
+          <p>Full-stack mental health platform providing personalized support through interactive emotional well-being assessments, with aggregation pipelines that surface mood trends.</p>
+          <div class="tag-row"><span class="tag">Node.js</span><span class="tag">Express.js</span><span class="tag">MongoDB</span><span class="tag">Mongoose</span></div>
+          <div class="proj-links"><a href="https://mindwell-chi-nine.vercel.app" target="_blank" rel="noopener">Visit site ↗</a></div>
+        </div>
+      </div>
+
+      <div class="proj">
+        <div class="proj-num">06</div>
+        <div class="proj-body">
+          <h3>Aerovant Drone Launch</h3>
+          <p>Product launch site for a drone brand, built to introduce the product line and drive early interest.</p>
+          <div class="tag-row"><span class="tag">Frontend</span><span class="tag">Product site</span></div>
+          <div class="proj-links"><a href="https://aerovantdronelaunch.vercel.app" target="_blank" rel="noopener">Visit site ↗</a></div>
+        </div>
+      </div>
+
+      <div class="proj">
+        <div class="proj-num">07</div>
+        <div class="proj-body">
+          <h3>Library Management System</h3>
+          <p>Full-featured library database application with complete CRUD for books, members, and borrowing records. Normalized 3NF schema, stored procedures and triggers for due-date tracking and fines, and role-based access control.</p>
+          <div class="tag-row"><span class="tag">C#</span><span class="tag">SQL Server</span><span class="tag">ASP.NET</span></div>
+        </div>
+      </div>
+
+      <div class="proj">
+        <div class="proj-num">08</div>
+        <div class="proj-body">
+          <h3>Student Information Management System</h3>
+          <p>Student records platform with a multi-table SQL Server schema — Students, Courses, Enrollment, Grades, Faculty — and stored procedures for grade calculation and batch reporting.</p>
+          <div class="tag-row"><span class="tag">C#</span><span class="tag">SQL Server</span><span class="tag">ASP.NET</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="also-built">
+      <span class="glabel">ALSO BUILT — MOBILE</span>
+      <div class="mini-grid">
+        <div class="mini-card">
+          <h4>ElevateU</h4>
+          <p>Mental health Android app with mood tracking, AI chat support, and personalized recommendations.</p>
+          <div class="tag-row"><span class="tag">Java</span><span class="tag">SQLite</span><span class="tag">Android Studio</span></div>
+        </div>
+        <div class="mini-card">
+          <h4>Smart Home Automation</h4>
+          <p>Mobile app to remotely control and automate home devices in real time.</p>
+          <div class="tag-row"><span class="tag">Java</span><span class="tag">XML</span><span class="tag">Android Studio</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="field">02 — experience</p>
+    <div class="exp-block">
+      <div class="exp-item">
+        <div class="exp-date">Jul 2026 — Present</div>
+        <div>
+          <h4>Full Stack Web Engineer</h4>
+          <p class="co">Extreme Freelancing</p>
+          <ul>
+            <li>Building full-stack applications end to end with TypeScript, React.js, Node.js, Astro, and Svelte.</li>
+            <li>Delivered several Shopify projects, building and customizing online stores for clients.</li>
+            <li>Designing and managing SQL Server and MongoDB databases for client projects, with optimized schemas and efficient retrieval.</li>
+            <li>Integrating REST APIs and third-party services with type-safe TypeScript code.</li>
+            <li>Owning the full project lifecycle — requirements through database design, deployment, and client handover.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-date">May 2026 — Jun 2026</div>
+        <div>
+          <h4>Web Development Intern</h4>
+          <p class="co">Arch Technologies</p>
+          <ul>
+            <li>Designed and optimized SQL and MongoDB schemas for dynamic web content and user management.</li>
+            <li>Built RESTful APIs integrating backend logic with structured database queries.</li>
+            <li>Wrote SQL queries, joins, and stored procedures powering real-time dashboards and reporting.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-date">Nov 2025</div>
+        <div>
+          <h4>Software Development Intern</h4>
+          <p class="co">Devrolin</p>
+          <ul>
+            <li>Delivered features on live software projects using agile workflows.</li>
+            <li>Implemented n8n workflow automation, building nodes to streamline data pipelines.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="view" id="contact">
+    <div class="contact-wrap">
+      <p class="field">03 — contact</p>
+      <h2>Let's build something that needs a solid schema underneath it.</h2>
+      <p>Open to full-stack and database engineering roles and freelance projects. The fastest way to reach me is email.</p>
+      <div class="contact-grid">
+        <a class="c-card" href="mailto:haikazahid321@gmail.com">
+          <span class="field">email</span>
+          <span class="val">haikazahid321@gmail.com</span>
+        </a>
+        
+        <a class="c-card" href="https://www.linkedin.com/in/hayqa-zahid-a3b7702aa" target="_blank" rel="noopener">
+          <span class="field">linkedin</span>
+          <span class="val">linkedin.com/in/hayqa-zahid</span>
+        </a>
+        <a class="c-card" href="https://github.com/HayqaZahid" target="_blank" rel="noopener">
+          <span class="field">github</span>
+          <span class="val">github.com/HayqaZahid</span>
+        </a>
+        <a class="c-card" href="https://vercel.com/hayqazahids-projects" target="_blank" rel="noopener">
+          <span class="field">vercel</span>
+          <span class="val">hayqazahids-projects</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="foot-inner">
+    <span>© 2026 Hayqa Zahid</span>
+    <span>Full Stack Web Engineer</span>
+  </div>
+</footer>
+
+<script>
+  function go(view){
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById(view).classList.add('active');
+    document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active', b.dataset.v===view));
+    window.scrollTo({top:0, behavior:'instant'});
+    history.replaceState(null,'','#'+view);
+  }
+  const initial = location.hash.replace('#','');
+  if(['home','work','contact'].includes(initial)) go(initial);
+</script>
+
+</body>
+</html>
